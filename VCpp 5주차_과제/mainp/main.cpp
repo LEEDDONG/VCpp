@@ -9,7 +9,7 @@
 POINT startPoint = { 0 };
 POINT endPoint = { 0 };
 POINT lastMousePs = { 0 };
-
+const wchar_t* text = L"crash!!!";
 
 int isMouseLButtonPressed = 0; // 왼쪽 마우스 버튼이 눌렸는지 여부를 나타내는 플래그
 int isMouseRButtonPressed = 0; // 오른쪽 마우스 버튼이 눌렸는지 여부를 나타내는 플래그
