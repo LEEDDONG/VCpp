@@ -8,8 +8,8 @@ bool isBoxVisible = false;
 bool isCirclesible = false;
 bool isDragging = false;
 bool isMoving = false;
-bool isspacebar=false;
-bool isbono=false;
+bool isspacebar = false;
+bool isbono = false;
 bool isryan = false;
 POINT startDrag;
 POINT startMove;
@@ -82,9 +82,9 @@ void DrawBonobonoFace(HDC hdc) {
     SelectObject(hdc, hFaceBrush);
     Ellipse(hdc, faceLeft, faceTop, faceRight, faceBottom);
     DeleteObject(hFaceBrush);
-    if(isspacebar){
+    if (isspacebar) {
         // 왼쪽찡긋
-        int wstartX = 250; 
+        int wstartX = 250;
         int wstartY = 200;
         int wendX = 230;
         int wendY = 190;
@@ -116,10 +116,10 @@ void DrawBonobonoFace(HDC hdc) {
 
         MoveToEx(hdc, wklstartX, wklstartY, NULL); // 시작점 이동
         LineTo(hdc, wklendX, wklendY); // 대각선 그리기
-       
+
     }
     else {
-        
+
 
         // 눈 그리기
         int eyeWidth = 6;   // 눈 가로 반지름
@@ -160,7 +160,7 @@ void DrawBonobonoFace(HDC hdc) {
     // 코1
     int noseLeft = 300;
     int noseRight = 350;
-    int noseTop =220;
+    int noseTop = 220;
     int noseBottom = 270;
 
     HBRUSH hnose1Brush = CreateSolidBrush(RGB(255, 255, 255)); // (코1)
@@ -219,7 +219,7 @@ void DrawBonobonoFace(HDC hdc) {
 
     MoveToEx(hdc, start4X, start4Y, NULL); // 시작점 이동
     LineTo(hdc, end4X, end4Y); // 대각선 그리기
-   
+
 }
 void DrawRyanFace(HDC hdc) {
     // Ryan 얼굴을 그리는 코드를 작성하세요.
@@ -232,7 +232,7 @@ void DrawRyanFace(HDC hdc) {
 
 
 
-    HBRUSH learBrush = CreateSolidBrush(RGB(255, 200, 15)); 
+    HBRUSH learBrush = CreateSolidBrush(RGB(255, 200, 15));
     SelectObject(hdc, learBrush);
     Ellipse(hdc, learLeft, learTop, learRight, learBottom);
     DeleteObject(learBrush);
@@ -244,7 +244,7 @@ void DrawRyanFace(HDC hdc) {
     int rearBottom = 170;
 
     // 얼굴 영역을 그리기
-    HBRUSH rearBrush = CreateSolidBrush(RGB(255, 200, 15)); 
+    HBRUSH rearBrush = CreateSolidBrush(RGB(255, 200, 15));
     SelectObject(hdc, rearBrush);
     Ellipse(hdc, rearLeft, rearTop, rearRight, rearBottom);
     DeleteObject(rearBrush);
@@ -255,14 +255,14 @@ void DrawRyanFace(HDC hdc) {
     int faceBottom = 350;
 
     // 얼굴 영역을 그리기
-    HBRUSH hFaceBrush = CreateSolidBrush(RGB(255, 200, 15)); 
+    HBRUSH hFaceBrush = CreateSolidBrush(RGB(255, 200, 15));
     SelectObject(hdc, hFaceBrush);
     Ellipse(hdc, faceLeft, faceTop, faceRight, faceBottom);
     DeleteObject(hFaceBrush);
 
 
-   
-    
+
+
     //  왼쪽 눈
     // 눈흰색 그리기
     int wEyeWidth = 8;    // 흰색 눈 가로 반지름
@@ -271,32 +271,32 @@ void DrawRyanFace(HDC hdc) {
     int rightWEyeX = 400;
     int weyeY = 195;
 
-    HBRUSH hwEyeBrush = CreateSolidBrush(RGB(0,0,0)); // 눈 색상 (흰색)
+    HBRUSH hwEyeBrush = CreateSolidBrush(RGB(0, 0, 0)); // 눈 색상 (흰색)
     SelectObject(hdc, hwEyeBrush);
     Ellipse(hdc, leftWEyeX - wEyeWidth, weyeY - wEyeHeight, leftWEyeX + wEyeWidth, weyeY + wEyeHeight);
     Ellipse(hdc, rightWEyeX - wEyeWidth, weyeY - wEyeHeight, rightWEyeX + wEyeWidth, weyeY + wEyeHeight);
     DeleteObject(hwEyeBrush);
-    
- //// 라이언 왼코
 
- //   int lnosewidth = 12;    // 흰색 눈 가로 반지름
- //   int rnoseheight = 12;   // 흰색 눈 세로 반지름
- //   int leftweyex = 330;
- //   int rightweyex = 460;
- //   int weyey = 230;
+    //// 라이언 왼코
 
- //   hbrush hweyebrush = createsolidbrush(rgb(255, 255, 255)); // 눈 색상 (흰색)
- //   selectobject(hdc, hweyebrush);
- //   ellipse(hdc, leftweyex - weyewidth, weyey - weyeheight, leftweyex + weyewidth, weyey + weyeheight);
- //   ellipse(hdc, rightweyex - weyewidth, weyey - weyeheight, rightweyex + weyewidth, weyey + weyeheight);
- //   deleteobject(hweyebrush);
+    //   int lnosewidth = 12;    // 흰색 눈 가로 반지름
+    //   int rnoseheight = 12;   // 흰색 눈 세로 반지름
+    //   int leftweyex = 330;
+    //   int rightweyex = 460;
+    //   int weyey = 230;
 
-
+    //   hbrush hweyebrush = createsolidbrush(rgb(255, 255, 255)); // 눈 색상 (흰색)
+    //   selectobject(hdc, hweyebrush);
+    //   ellipse(hdc, leftweyex - weyewidth, weyey - weyeheight, leftweyex + weyewidth, weyey + weyeheight);
+    //   ellipse(hdc, rightweyex - weyewidth, weyey - weyeheight, rightweyex + weyewidth, weyey + weyeheight);
+    //   deleteobject(hweyebrush);
 
 
 
 
-    
+
+
+
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -348,7 +348,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
             }
         }
         break;
-       
+
     case WM_MOUSEMOVE:
         if (isMoving && isCirclesible) {
             HDC hdc = GetDC(hWnd);
@@ -371,7 +371,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
                 // 오른쪽으로 드래그한 경우 확대
                 radius += deltaX;
             }
-             if (deltaX < 0) {
+            if (deltaX < 0) {
                 // 왼쪽으로 드래그한 경우 축소
                 radius -= abs(deltaX);
                 radius -= abs(deltaX);
@@ -414,7 +414,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
             ReleaseDC(hWnd, hdc);
         }
-        if (isDragging && (isBoxVisible||isCirclesible)) {
+        if (isDragging && (isBoxVisible || isCirclesible)) {
             HDC hdc = GetDC(hWnd);
 
             // 이전에 그린 사각형 또는 원을 지웁니다.
@@ -513,9 +513,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
                 InvalidateRect(hWnd, NULL, TRUE);
             }
         }
-        
-        
-        
+
+
+
         break;
     case WM_SETCURSOR:
     {
