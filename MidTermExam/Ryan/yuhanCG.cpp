@@ -208,9 +208,33 @@ void DrawRyan(HWND hWnd, HDC hdc, int left, int top, int right, int bottom) {
     int leftEyebrowStartY = centerY - eyebrowHeight * 4;
     int leftEyebrowEndX = leftEyebrowStartX + eyebrowWidth * 3;
     int leftEyebrowEndY = leftEyebrowStartY;
-
     MoveToEx(hdc, leftEyebrowStartX, leftEyebrowStartY, NULL);
     LineTo(hdc, leftEyebrowEndX, leftEyebrowEndY);
+
+    int eyebrowWidth2 = radius / 12;
+    int eyebrowHeight2 = radius / 12;
+
+    // Left eyebrows above the eye
+    int leftEyebrowStartX2 = centerX - eyebrowWidth2 * 8.5;
+    int leftEyebrowStartY2 = centerY - eyebrowHeight2 * 4.2;
+    int leftEyebrowEndX2 = leftEyebrowStartX2 + eyebrowWidth2 * 3;
+    int leftEyebrowEndY2 = leftEyebrowStartY2;
+
+    MoveToEx(hdc, leftEyebrowStartX2, leftEyebrowStartY2, NULL);
+    LineTo(hdc, leftEyebrowEndX2, leftEyebrowEndY2);
+
+    int eyebrowWidth3 = radius / 12;
+    int eyebrowHeight3 = radius / 12;
+
+    // Left eyebrows above the eye
+    int leftEyebrowStartX3 = centerX - eyebrowWidth3 * 8.5;
+    int leftEyebrowStartY3 = centerY - eyebrowHeight3 * 4.4;
+    int leftEyebrowEndX3 = leftEyebrowStartX3 + eyebrowWidth3 * 3;
+    int leftEyebrowEndY3 = leftEyebrowStartY3;
+
+    MoveToEx(hdc, leftEyebrowStartX3, leftEyebrowStartY3, NULL);
+    LineTo(hdc, leftEyebrowEndX3, leftEyebrowEndY3);
+
 
     // Right eyebrows above the eye
     int rightEyebrowStartX = centerX + eyebrowWidth * 6;
@@ -220,6 +244,24 @@ void DrawRyan(HWND hWnd, HDC hdc, int left, int top, int right, int bottom) {
 
     MoveToEx(hdc, rightEyebrowStartX, rightEyebrowStartY, NULL);
     LineTo(hdc, rightEyebrowEndX, rightEyebrowEndY);
+    // Right eyebrows above the eye
+    int rightEyebrowStartX2 = centerX + eyebrowWidth2 * 6;
+    int rightEyebrowStartY2 = centerY - eyebrowHeight2 * 4.2;
+    int rightEyebrowEndX2 = rightEyebrowStartX2 + eyebrowWidth2 * 3;
+    int rightEyebrowEndY2 = rightEyebrowStartY2;
+
+    MoveToEx(hdc, rightEyebrowStartX2, rightEyebrowStartY2, NULL);
+    LineTo(hdc, rightEyebrowEndX2, rightEyebrowEndY2);
+
+    // Right eyebrows above the eye
+    int rightEyebrowStartX3 = centerX + eyebrowWidth3 * 6;
+    int rightEyebrowStartY3 = centerY - eyebrowHeight3 * 4.4;
+    int rightEyebrowEndX3 = rightEyebrowStartX3 + eyebrowWidth3 * 3;
+    int rightEyebrowEndY3 = rightEyebrowStartY3;
+
+    MoveToEx(hdc, rightEyebrowStartX3, rightEyebrowStartY3, NULL);
+    LineTo(hdc, rightEyebrowEndX3, rightEyebrowEndY3);
+
 
     // Nose
     int RadiusNose = radius / 6;
@@ -239,4 +281,75 @@ void DrawRyan(HWND hWnd, HDC hdc, int left, int top, int right, int bottom) {
     SelectObject(hdc, hRightNoseBrush);
     Ellipse(hdc, rightNoseX - RadiusNose, rightNoseY - RadiusNose, rightNoseX + RadiusNose, rightNoseY + RadiusNose);
     DeleteObject(hRightNoseBrush);
+}
+
+void DrawBox(HWND hWnd, HDC hdc, int left, int top, int right, int bottom) {
+  
+    HBRUSH hBrush = CreateSolidBrush(RGB(255, 0,0));
+    SelectObject(hdc, hBrush);
+    Rectangle(hdc, left,top,right,bottom);
+}
+
+void DrawCircle(HWND hWnd, HDC hdc, int left, int top, int right, int bottom) {
+   
+
+    HBRUSH hBrush = CreateSolidBrush(RGB(255, 0,0));
+    SelectObject(hdc, hBrush);
+    // Face
+    Ellipse(hdc, left,top,right,bottom);
+
+}
+void DrawCube(HWND hWnd, HDC hdc, int left, int top, int right, int bottom) {
+    // Set the color for drawing the cube
+    HPEN hPen = CreatePen(PS_SOLID, 2, RGB(0, 0, 255));  // Blue color for lines
+    SelectObject(hdc, hPen);
+
+    // Calculate cube coordinates
+    int frontLeftTopX = left;
+    int frontLeftTopY = top;
+    int frontRightTopX = right;
+    int frontRightTopY = top;
+    int frontLeftBottomX = left;
+    int frontLeftBottomY = bottom;
+    int frontRightBottomX = right;
+    int frontRightBottomY = bottom;
+
+    int backLeftTopX = left - 50;  // Adjust as needed
+    int backLeftTopY = top - 50;   // Adjust as needed
+    int backRightTopX = right - 50; // Adjust as needed
+    int backRightTopY = top - 50;   // Adjust as needed
+    int backLeftBottomX = left - 50; // Adjust as needed
+    int backLeftBottomY = bottom - 50; // Adjust as needed
+    int backRightBottomX = right - 50; // Adjust as needed
+    int backRightBottomY = bottom - 50; // Adjust as needed
+
+    // Draw the front face of the cube
+    MoveToEx(hdc, frontLeftTopX, frontLeftTopY, NULL);
+    LineTo(hdc, frontRightTopX, frontRightTopY);
+    LineTo(hdc, frontRightBottomX, frontRightBottomY);
+    LineTo(hdc, frontLeftBottomX, frontLeftBottomY);
+    LineTo(hdc, frontLeftTopX, frontLeftTopY);
+
+    // Draw the lines connecting the front and back faces
+    MoveToEx(hdc, frontLeftTopX, frontLeftTopY, NULL);
+    LineTo(hdc, backLeftTopX, backLeftTopY);
+
+    MoveToEx(hdc, frontRightTopX, frontRightTopY, NULL);
+    LineTo(hdc, backRightTopX, backRightTopY);
+
+    MoveToEx(hdc, frontRightBottomX, frontRightBottomY, NULL);
+    LineTo(hdc, backRightBottomX, backRightBottomY);
+
+    MoveToEx(hdc, frontLeftBottomX, frontLeftBottomY, NULL);
+    LineTo(hdc, backLeftBottomX, backLeftBottomY);
+
+    // Draw the back face of the cube
+    MoveToEx(hdc, backLeftTopX, backLeftTopY, NULL);
+    LineTo(hdc, backRightTopX, backRightTopY);
+    LineTo(hdc, backRightBottomX, backRightBottomY);
+    LineTo(hdc, backLeftBottomX, backLeftBottomY);
+    LineTo(hdc, backLeftTopX, backLeftTopY);
+
+    // Delete the pen
+    DeleteObject(hPen);
 }

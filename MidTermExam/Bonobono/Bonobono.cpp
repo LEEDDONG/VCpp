@@ -1,5 +1,4 @@
-﻿
-#include "../Ryan/yuhanCG.h"
+﻿#include "../Ryan/yuhanCG.h"
 #define BOX_BUTTON_ID 1
 #define CIRCLE_BUTTON_ID 2
 #define BONOBONO_BUTTON_ID 3
@@ -12,43 +11,52 @@ bool isMoving = false;
 bool isspacebar = false;
 bool isbono = false;
 bool isryan = false;
+bool isCubeVisible = false;
 int blink = 0;
+
 
 POINT startDrag;
 POINT startMove;
 POINT circleCenter;
-
+RECT currentRect = { 0, 0, 0, 0 };
 RECT drawArea = { 16, 96, 764, 424 };
-
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     RECT Box = { 8, 8, 772, 432 };
 
     switch (message) {
     case WM_COMMAND:
+        // Reset all drawing flags
         isBoxVisible = false;
         isCirclesible = false;
         isbono = false;
+        isryan = false;
+        isCubeVisible = false;
+
+        // Set the appropriate drawing flag based on the clicked button
         if (LOWORD(wParam) == BOX_BUTTON_ID) {
             isBoxVisible = true;
         }
-        if (LOWORD(wParam) == CIRCLE_BUTTON_ID) {
+        else if (LOWORD(wParam) == CIRCLE_BUTTON_ID) {
             isCirclesible = true;
         }
-        if (LOWORD(wParam) == BONOBONO_BUTTON_ID) {
+        else if (LOWORD(wParam) == BONOBONO_BUTTON_ID) {
             isbono = true;
-            isryan = false;
         }
-
-        if (LOWORD(wParam) == RYAN_BUTTON_ID) {
-            isbono = false;
+        else if (LOWORD(wParam) == RYAN_BUTTON_ID) {
             isryan = true;
         }
+        else if (LOWORD(wParam) == CUBE_BUTTON_ID) {
+            isCubeVisible = true;
+        }
+
+        // Invalidate the window to trigger a redraw
         InvalidateRect(hWnd, NULL, TRUE);
         SetFocus(hWnd);
         break;
+
     case WM_LBUTTONDOWN:
-        if (isryan) {
+        if (isryan || isBoxVisible || isCirclesible||isCubeVisible) {
             startDrag.x = LOWORD(lParam);
             startDrag.y = HIWORD(lParam);
             isDragging = true;
@@ -56,16 +64,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
         }
         break;
     case WM_RBUTTONDOWN:
-        if (isryan) {
+        if (isryan ) {
             startDrag.x = LOWORD(lParam);
             startDrag.y = HIWORD(lParam);
             isDragging = true;
             isMoving = false;
         }
+     
+        if (isBoxVisible || isCirclesible) {
+            POINT clickPoint;
+            clickPoint.x = LOWORD(lParam);
+            clickPoint.y = HIWORD(lParam);
+            // 클릭한 좌표가 그림 내부에 있는지 확인
+            if (PtInRect(&currentRect, clickPoint)) {
+                startMove.x = clickPoint.x;
+                startMove.y = clickPoint.y;
+                isMoving = true;
+                isDragging = false;
+            }
+        }
         break;
 
     case WM_MOUSEMOVE:
-        if (isDragging && isryan) {
+        
+
+        
+        if (isDragging) {
+
             HDC hdc = GetDC(hWnd);
 
             // Update the startMove point based on the drag movement
@@ -77,15 +102,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
                 // Calculate the new rectangle based on the drag movement
                 int newRectLeft = startDrag.x;
                 int newRectTop = startDrag.y;
-                int newRectRight = startDrag.x ;
-                int newRectBottom = startDrag.y ;
+                int newRectRight = startDrag.x;
+                int newRectBottom = startDrag.y;
 
                 // Redraw the window only if the cursor is within drawArea
                 InvalidateRect(hWnd, &drawArea, TRUE);
                 UpdateWindow(hWnd);
+                if (isryan) {
 
-                // Draw the rectangle
-                DrawRyan(hWnd, hdc, newRectLeft, newRectTop, newRectRight, newRectBottom);
+                    DrawRyan(hWnd, hdc, newRectLeft, newRectTop, newRectRight, newRectBottom);
+                }
+                if (isCirclesible)
+                {
+                    DrawCircle(hWnd, hdc, newRectLeft, newRectTop, newRectRight, newRectBottom);
+                }
+                if (isBoxVisible)
+                {
+                    DrawBox(hWnd, hdc, newRectLeft, newRectTop, newRectRight, newRectBottom);
+
+                }
+                if (isCubeVisible) {
+                    DrawCube(hWnd, hdc, newRectLeft, newRectTop, newRectRight, newRectBottom);
+                }
             }
             else {
                 // The cursor is outside drawArea, stop drawing
@@ -98,7 +136,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 
     case WM_LBUTTONUP:
-        if (isryan) {
+        if (isryan||isBoxVisible||isCirclesible||isCubeVisible) {
             POINT clickPoint;
             clickPoint.x = LOWORD(lParam);
             clickPoint.y = HIWORD(lParam);
@@ -111,13 +149,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
         break;
 
     case WM_RBUTTONUP:
-        if (isryan) {
-            POINT clickPoint;
-            clickPoint.x = LOWORD(lParam);
-            clickPoint.y = HIWORD(lParam);
-
-
-            isDragging = false;
+        if (isryan||isCirclesible||isBoxVisible) {
+          
+           isDragging = false;
             isMoving = false;
 
         }
@@ -175,23 +209,38 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
         FillRect(hdc, &drawArea, CreateSolidBrush(RGB(255, 255, 255)));
 
         DeleteObject(hBrush);
+        // Calculate the new rectangle based on the drag movement
+        int newRectLeft = startDrag.x;
+        int newRectTop = startDrag.y;
+        int newRectRight = startDrag.x + (startMove.x - startDrag.x);
+        int newRectBottom = startDrag.y + (startMove.y - startDrag.y);
 
         if (isbono) {
             // 스페이스바를 눌렀을 때 윙크하는 부분
             DrawBonobono(hWnd, hdc, blink);
         }
         if (isryan) {
-            // Calculate the new rectangle based on the drag movement
-            int newRectLeft = startDrag.x;
-            int newRectTop = startDrag.y;
-            int newRectRight = startDrag.x + (startMove.x - startDrag.x);
-            int newRectBottom = startDrag.y + (startMove.y - startDrag.y);
+          
 
             DrawRyan(hWnd, hdc, newRectLeft, newRectTop, newRectRight, newRectBottom);
+        } if (isCirclesible) {
+           
+
+            DrawCircle(hWnd, hdc, newRectLeft, newRectTop, newRectRight, newRectBottom);
+        }
+        if (isBoxVisible) {
+           
+
+            DrawBox(hWnd, hdc, newRectLeft, newRectTop, newRectRight, newRectBottom);
+        }
+        if (isCubeVisible) {
+            DrawCube(hWnd, hdc, newRectLeft, newRectTop, newRectRight, newRectBottom);
         }
         EndPaint(hWnd, &ps);
     }
-                 break;
+
+
+    break;
 
 
 
@@ -239,21 +288,21 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 
     hButton1 = CreateWindow(
         L"BUTTON", L"Box", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-        16, 16, 130, 64, hWnd, (HMENU)BOX_BUTTON_ID, hInstance, NULL);
+        16, 24, 134, 64, hWnd, (HMENU)BOX_BUTTON_ID, hInstance, NULL);
 
     hButton2 = CreateWindow(
         L"BUTTON", L"Circle", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-        162, 16, 130, 64, hWnd, (HMENU)CIRCLE_BUTTON_ID, hInstance, NULL);
+        169.5, 24, 134, 64, hWnd, (HMENU)CIRCLE_BUTTON_ID, hInstance, NULL);
 
     hButton3 = CreateWindow(
         L"BUTTON", L"Bonobono", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-        308, 16, 130, 64, hWnd, (HMENU)BONOBONO_BUTTON_ID, hInstance, NULL);
+        323, 24, 134, 64, hWnd, (HMENU)BONOBONO_BUTTON_ID, hInstance, NULL);
     hButton4 = CreateWindow(
         L"BUTTON", L"Ryan", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-        454, 16, 130, 64, hWnd, (HMENU)RYAN_BUTTON_ID, hInstance, NULL);
+        476.5, 24, 134, 64, hWnd, (HMENU)RYAN_BUTTON_ID, hInstance, NULL);
     hButton5 = CreateWindow(
         L"BUTTON", L"Cube", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-        620, 16, 130, 64, hWnd, (HMENU)CUBE_BUTTON_ID, hInstance, NULL);
+        630,24, 134, 64, hWnd, (HMENU)CUBE_BUTTON_ID, hInstance, NULL);
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
 
